@@ -1,6 +1,1 @@
-__pycache__/
-*.pyc
-.pytest_cache/
-.coverage
-htmlcov/
-*.egg-info/
+Nothing should be ignored since the modified files are only test Python files (.py) which are source code files that should be tracked in version control.
