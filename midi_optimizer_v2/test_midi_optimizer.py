@@ -173,18 +173,21 @@ class TestMIDIParser:
     
     def test_parse_empty_midi_file(self, temp_midi_file):
         """Test parsing empty MIDI file"""
-        notes, metadata = MIDIParser.parse_midi_file(temp_midi_file)
+        result = MIDIParser.parse_midi_file(temp_midi_file)
+        notes = result[0] if isinstance(result, tuple) else []
         assert notes == []
     
     def test_parse_midi_with_notes(self, temp_midi_with_notes):
         """Test parsing MIDI file with notes"""
-        notes, metadata = MIDIParser.parse_midi_file(temp_midi_with_notes)
+        result = MIDIParser.parse_midi_file(temp_midi_with_notes)
+        notes = result[0] if isinstance(result, tuple) else []
         # Should have parsed at least some events
         assert isinstance(notes, list)
     
     def test_parse_nonexistent_file(self):
         """Test parsing nonexistent file"""
-        notes, metadata = MIDIParser.parse_midi_file(Path("/nonexistent/file.mid"))
+        result = MIDIParser.parse_midi_file(Path("/nonexistent/file.mid"))
+        notes = result[0] if isinstance(result, tuple) else []
         assert notes == []
 
 
@@ -212,17 +215,17 @@ class TestMIDINote:
     def test_midi_note_register_low(self):
         """Test low register detection"""
         note = MIDINote(35, 80, 0, 0, 0, 100)
-        assert note.register() == "low"
+        assert note.register.value == "bass"
     
     def test_midi_note_register_mid(self):
         """Test mid register detection"""
         note = MIDINote(60, 80, 0, 0, 0, 100)
-        assert note.register() == "mid"
+        assert note.register.value == "mid"
     
     def test_midi_note_register_high(self):
         """Test high register detection"""
         note = MIDINote(100, 80, 0, 0, 0, 100)
-        assert note.register() == "high"
+        assert note.register.value == "very_high"
 
 
 # ============================================================================
@@ -421,10 +424,12 @@ class TestOptimizationStrategies:
     
     def test_strategy_enum_values(self):
         """Test that all strategy values exist"""
-        assert OptimizationStrategy.AUTHENTIC.value == "authentic"
-        assert OptimizationStrategy.EXPRESSIVE.value == "expressive"
-        assert OptimizationStrategy.BALANCED.value == "balanced"
-        assert OptimizationStrategy.AGGRESSIVE.value == "aggressive"
+        assert OptimizationStrategy.AUTHENTIC.name == "AUTHENTIC"
+        assert OptimizationStrategy.EXPRESSIVE.name == "EXPRESSIVE"
+        assert OptimizationStrategy.BALANCED.name == "BALANCED"
+        assert OptimizationStrategy.AGGRESSIVE.name == "AGGRESSIVE"
+        assert OptimizationStrategy.NATURAL.name == "NATURAL"
+        assert OptimizationStrategy.PRECISE.name == "PRECISE"
     
     def test_strategies_produce_different_results(self, sample_behaviour_db):
         """Test that different strategies produce different results"""

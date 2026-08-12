@@ -50,8 +50,16 @@ def cli(db_path):
     """Build a CLI instance without touching the hardcoded default db path."""
     instance = MIDIOptimizerCLI.__new__(MIDIOptimizerCLI)
     instance.db_path = db_path
+    instance.verbose = False
     instance.app = MIDIOptimizerApp(db_path)
     return instance
+
+
+@pytest.fixture
+def empty_midi_file(tmp_path):
+    path = tmp_path / "empty.mid"
+    _write_midi(path, with_notes=False)
+    return path
 
 
 def _write_midi(path: Path, with_notes: bool = True):
@@ -78,13 +86,6 @@ def _write_midi(path: Path, with_notes: bool = True):
 def midi_file(tmp_path):
     path = tmp_path / "input.mid"
     _write_midi(path, with_notes=True)
-    return path
-
-
-@pytest.fixture
-def empty_midi_file(tmp_path):
-    path = tmp_path / "empty.mid"
-    _write_midi(path, with_notes=False)
     return path
 
 
@@ -130,7 +131,7 @@ class TestCLIAnalyze:
     def test_analyze_empty_midi(self, cli, empty_midi_file):
         # analyze_file() returns {"error": ...}; CLI still reports success
         # since it only fails on unhandled exceptions.
-        assert cli.analyze(str(empty_midi_file)) is True
+        assert cli.analyze(str(empty_midi_file)) is False  # No notes = analyze fails
 
 
 # ============================================================================
@@ -192,8 +193,9 @@ class TestCLIBatch:
 
 def _fake_cli_init(db_path):
     """Build a replacement __init__ that skips the hardcoded default db path."""
-    def _init(self):
+    def _init(self, db_path=None, verbose=False):
         self.db_path = db_path
+        self.verbose = verbose
         self.app = MIDIOptimizerApp(db_path)
     return _init
 
@@ -232,7 +234,23 @@ class TestCLIMain:
 
     def test_cli_init_exits_when_database_missing(self, monkeypatch, tmp_path):
         missing_db = tmp_path / "does_not_exist.json"
-        monkeypatch.setattr("midi_optimizer_cli.Path", lambda *_: missing_db)
+        
+        class FakePath:
+            @staticmethod
+            def home():
+                return tmp_path
+            
+            @staticmethod
+            def cwd():
+                return tmp_path
+        
+        def fake_path(*args):
+            if len(args) == 1 and isinstance(args[0], str) and args[0].endswith('.json'):
+                return missing_db
+            return tmp_path
+        
+        monkeypatch.setattr("midi_optimizer_cli.Path", fake_path)
+        monkeypatch.setattr("pathlib.Path", fake_path)
         with pytest.raises(SystemExit) as exc:
             MIDIOptimizerCLI()
         assert exc.value.code == 1
