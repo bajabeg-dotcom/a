@@ -1,0 +1,86 @@
+{
+  "engine": "KORG PA800 Style Optimizer",
+  "version": "1.0",
+  "description": "Default velocity-behaviour profile per Style track role (Drum, Percussion, Bass, Chord1, Chord2, Pad, Phrase1, Phrase2). Unlike ai_database.json (built from forensic analysis of factory Style MIDI data), these are hand-authored heuristic defaults meant as a reasonable starting point -- tune the velocity_zones to taste.",
+  "style_rules": {
+    "DRUM": {
+      "part": "DRUM",
+      "role": "rhythm foundation",
+      "description": "Kit/percussion pattern driving the groove; wide dynamic range for accents.",
+      "velocity_zones": [
+        {"velocity_range": "1-50", "center": 35, "character": "soft", "use_case": "Ghost notes, hi-hat taps"},
+        {"velocity_range": "51-100", "center": 78, "character": "normal", "use_case": "Standard groove hits"},
+        {"velocity_range": "101-127", "center": 114, "character": "accent", "use_case": "Snare/crash accents"}
+      ]
+    },
+    "PERCUSSION": {
+      "part": "PERCUSSION",
+      "role": "rhythm accent",
+      "description": "Auxiliary percussion layered under the drum part; generally softer and more even.",
+      "velocity_zones": [
+        {"velocity_range": "1-45", "center": 30, "character": "soft", "use_case": "Subtle texture"},
+        {"velocity_range": "46-90", "center": 66, "character": "normal", "use_case": "Standard percussion hits"},
+        {"velocity_range": "91-127", "center": 108, "character": "accent", "use_case": "Percussion accents"}
+      ]
+    },
+    "BASS": {
+      "part": "BASS",
+      "role": "bass",
+      "description": "Bassline; consistent, moderately strong velocities to anchor the arrangement.",
+      "velocity_zones": [
+        {"velocity_range": "1-55", "center": 40, "character": "soft", "use_case": "Sustained/legato passages"},
+        {"velocity_range": "56-95", "center": 75, "character": "normal", "use_case": "Standard bassline"},
+        {"velocity_range": "96-127", "center": 110, "character": "strong", "use_case": "Slap/accented bass hits"}
+      ]
+    },
+    "CHORD1": {
+      "part": "CHORD1",
+      "role": "accompaniment",
+      "description": "Primary chordal comping voice; moderate, even dynamics.",
+      "velocity_zones": [
+        {"velocity_range": "1-50", "center": 35, "character": "soft", "use_case": "Sustained pads under a solo"},
+        {"velocity_range": "51-90", "center": 68, "character": "normal", "use_case": "Standard comping"},
+        {"velocity_range": "91-127", "center": 100, "character": "strong", "use_case": "Rhythmic chord stabs"}
+      ]
+    },
+    "CHORD2": {
+      "part": "CHORD2",
+      "role": "accompaniment",
+      "description": "Secondary chordal voice, usually sits slightly under Chord1 in the mix.",
+      "velocity_zones": [
+        {"velocity_range": "1-45", "center": 30, "character": "soft", "use_case": "Background fill"},
+        {"velocity_range": "46-85", "center": 62, "character": "normal", "use_case": "Standard comping"},
+        {"velocity_range": "86-127", "center": 95, "character": "strong", "use_case": "Doubled accents with Chord1"}
+      ]
+    },
+    "PAD": {
+      "part": "PAD",
+      "role": "accompaniment",
+      "description": "Sustained harmonic bed; narrow dynamic range, mostly soft-to-normal.",
+      "velocity_zones": [
+        {"velocity_range": "1-60", "center": 42, "character": "soft", "use_case": "Ambient sustain"},
+        {"velocity_range": "61-127", "center": 80, "character": "normal", "use_case": "Fuller harmonic support"}
+      ]
+    },
+    "PHRASE1": {
+      "part": "PHRASE1",
+      "role": "lead",
+      "description": "Primary melodic/riff phrase; wide expressive dynamic range.",
+      "velocity_zones": [
+        {"velocity_range": "1-50", "center": 35, "character": "soft", "use_case": "Quiet melodic fills"},
+        {"velocity_range": "51-95", "center": 74, "character": "normal", "use_case": "Standard phrase playing"},
+        {"velocity_range": "96-127", "center": 112, "character": "aggressive", "use_case": "Lead accents/hooks"}
+      ]
+    },
+    "PHRASE2": {
+      "part": "PHRASE2",
+      "role": "lead",
+      "description": "Secondary melodic/riff phrase, typically a counter-line to Phrase1.",
+      "velocity_zones": [
+        {"velocity_range": "1-45", "center": 30, "character": "soft", "use_case": "Background counter-melody"},
+        {"velocity_range": "46-90", "center": 68, "character": "normal", "use_case": "Standard phrase playing"},
+        {"velocity_range": "91-127", "center": 105, "character": "strong", "use_case": "Counter-line accents"}
+      ]
+    }
+  }
+}
